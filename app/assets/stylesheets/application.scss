@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+ @import "bootstrap";
+ @import "simple_calendar";
+
+.container {
+   margin: 3rem auto;
+}
+
+h1 {
+  margin-bottom: 3rem;
+}

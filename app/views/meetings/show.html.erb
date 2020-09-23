@@ -1,0 +1,31 @@
+<h1>予定の詳細</h1>
+
+
+
+<div class='mb-3'>
+  <table class='table'>
+    <tbody>
+    <tr>
+      <th>日時</th>
+      <td><%= @meeting.start_time %></td>
+    </tr>
+    <tr>
+      <th>ラベル</th>
+      <td><%= @meeting.label %></td>
+    </tr>
+    <tr>
+      <th>詳細</th>
+      <td><%= @meeting.detail %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class='nav justify-content-end'>
+  <%= link_to '編集', edit_meeting_path, class: 'btn btn-primary mr-3' %>
+  <%= link_to '削除', meeting_path, method: :delete, class: 'btn btn-danger',
+      data: {confirm: "#{@meeting.label}を削除します。よろしいですか？"} %>
+</div>
+<div class='nav justify-content-start'>
+  <%= link_to '戻る', :back, class: 'btn btn-primary' %>
+</div>

@@ -1,0 +1,41 @@
+<h1>予定一覧</h1>
+
+<div class='nav justify-content-end mb-3'>
+  <%= link_to '新規作成', new_meeting_path, class: 'btn btn-primary' %>
+</div>
+
+<div>
+  <table class='table mb-5'>
+    <thead>
+      <tr>
+        <th>ラベル</th>
+        <th>予定日時</th>
+        <th colspan='3'></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @meetings.each do |meeting| %>
+        <tr>
+          <td><%= meeting.label %></td>
+          <td><%= meeting.start_time %></td>
+          <td><%= link_to '詳細', meeting_path(meeting), class: 'btn btn-secondary' %></td>
+          <td><%= link_to '編集', edit_meeting_path(meeting), class: 'btn btn-primary' %></td>
+          <td><%= link_to '削除', meeting_path(meeting), method: :delete, class: 'btn btn-danger', 
+                  data: {confirm: "#{meeting.label}を削除してもよろしいですか？"} %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= month_calendar events: @meetings do |date, meetings| %>
+  <%= date.day %>
+
+  <% meetings.each do |meeting| %>
+    <div>
+      <%= link_to meeting.label, meeting_path(meeting) %>
+    </div>
+  <% end %>
+<% end %>
