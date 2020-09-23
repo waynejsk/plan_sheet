@@ -2,7 +2,7 @@ class MeetingsController < ApplicationController
   before_action :set_meeting, only: [:show, :edit, :update, :destroy]
   
   def index
-    @meetings = Meeting.all
+    @meetings = Meeting.page(params[:page]).per(5).order(updated_at: :desc)
   end
 
   def new
@@ -12,7 +12,7 @@ class MeetingsController < ApplicationController
   def create
     @meeting = Meeting.new(meeting_params)
     if @meeting.save
-      redirect_to meetings_url, notice: "#{@meeting}を作成しました"
+      redirect_to meetings_url, flash: {success: "#{@meeting.label}を作成しました"}
     else
       render :new
     end
@@ -26,7 +26,7 @@ class MeetingsController < ApplicationController
 
   def update
     if @meeting.update(meeting_params)
-      redirect_to meetings_url, notice: "#{@meeting}を更新しました"
+      redirect_to meetings_url, flash: {success: "#{@meeting.label}を更新しました"}
     else
       render :edit
     end
@@ -34,7 +34,7 @@ class MeetingsController < ApplicationController
 
   def destroy
     @meeting.destroy!
-    redirect_to meetings_url
+    redirect_to meetings_url, flash: {danger: "#{@meeting.label}を削除しました"}
   end
 
   private

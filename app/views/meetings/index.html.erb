@@ -4,7 +4,7 @@
   <%= link_to '新規作成', new_meeting_path, class: 'btn btn-primary' %>
 </div>
 
-<div>
+<div class='mb-5'>
   <table class='table mb-5'>
     <thead>
       <tr>
@@ -28,7 +28,9 @@
       <% end %>
     </tbody>
   </table>
+  <%= paginate @meetings %>
 </div>
+
 
 <%= month_calendar events: @meetings do |date, meetings| %>
   <%= date.day %>
