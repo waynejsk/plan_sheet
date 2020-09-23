@@ -1,6 +1,10 @@
 <h1>予定の詳細</h1>
 
-
+<% if current_user.admin? #&& @meeting.user_id != current_user %>
+  <div class='nav justify-content-end mb-5'>
+    <%= link_to 'メール送信', send_email_meeting_path(@meeting), method: :post, class: 'btn btn-primary' %>
+  </div>
+<% end %>
 
 <div class='mb-3'>
   <table class='table'>

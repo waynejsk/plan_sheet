@@ -1,0 +1,5 @@
+class Admin::UsersController < ApplicationController
+  def index
+    @users = User.page(params[:page]).order(updated_at: :desc)
+  end
+end

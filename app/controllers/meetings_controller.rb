@@ -1,8 +1,9 @@
 class MeetingsController < ApplicationController
-  before_action :set_meeting, only: [:show, :edit, :update, :destroy]
+  before_action :set_meeting, only: [:edit, :update, :destroy]
+  before_action :set_meeting_others_can_see, only: [:show, :send_email]
   
   def index
-    @meetings = Meeting.page(params[:page]).per(5).order(updated_at: :desc)
+    @meetings = current_user.meetings.page(params[:page]).per(5).order(updated_at: :desc)
   end
 
   def new
@@ -10,7 +11,7 @@ class MeetingsController < ApplicationController
   end
 
   def create
-    @meeting = Meeting.new(meeting_params)
+    @meeting = current_user.meetings.new(meeting_params)
     if @meeting.save
       redirect_to meetings_url, flash: {success: "#{@meeting.label}を作成しました"}
     else
@@ -37,13 +38,29 @@ class MeetingsController < ApplicationController
     redirect_to meetings_url, flash: {danger: "#{@meeting.label}を削除しました"}
   end
 
-  private
+  def send_email
+    @user = User.find_by(id: @meeting.user_id)
+    AdminMailer.creation_email(@user, @meeting).deliver_now
+    redirect_to meeting_path(@meeting), flash: {success: 'メールを送信しました'}
+  end
 
+  private
     def set_meeting
+      @meeting = current_user.meetings.find(params[:id])
+    end
+
+    def set_meeting_others_can_see
       @meeting = Meeting.find(params[:id])
+      #作成者と管理人のみ許可
+      if @meeting.user_id != current_user.id
+        unless current_user.admin?
+          #ページがあることを知らせてしまうから表示しないほうがいいのかも
+          redirect_to root_url, flash: {danger: 'アクセス権限がありません'}
+        end
+      end
     end
 
     def meeting_params
-      params.require(:meeting).permit(:start_time, :label, :detail)
+      params.require(:meeting).permit(:start_time, :label, :detail, :user_id)
     end
 end
